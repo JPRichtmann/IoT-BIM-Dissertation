@@ -33,7 +33,7 @@ mapView.lookAt({ target: new GeoCoordinates(53.545, -2.128), zoomLevel: 17, tilt
 // make sure the map is rendered
 mapView.update();
 
-// Setup of IFC loader and imporitng custom models
+// Setup of IFC loader and import custom model with click event
 const ifcLoader = new IFCLoader();
 
 window.addEventListener("dblclick", (evt) => {
@@ -44,7 +44,7 @@ window.addEventListener("dblclick", (evt) => {
     ifcmodel.rotateX(Math.PI / 2);
     ifcmodel.rotateY(Math.PI / 1.7);
 
-    //Assign the coordinates to the obj
+    //Assign the coordinates to the IFC
     const geoPosition = mapView.getGeoCoordinatesAt(evt.pageX, evt.pageY);
     ifcmodel.anchor = geoPosition;
     mapView.mapAnchors.add(ifcmodel);
@@ -52,15 +52,8 @@ window.addEventListener("dblclick", (evt) => {
 });
 
 //--------------------- Domestic Energy Performance Certificates API ----------------------
-/* Domestic Energy Performance Certificates API
-Credentials: 
-    Email: jan-philipp.richtmann.20@ucl.ac.uk
-    API-key: b025fad898e349f11e28d548cf3696b41f949d0a
-        --> Base64-encoded authentication token: Basic amFuLXBoaWxpcHAucmljaHRtYW5uLjIwQHVjbC5hYy51azpiMDI1ZmFkODk4ZTM0OWYxMWUyOGQ1NDhjZjM2OTZiNDFmOTQ5ZDBh
-*/
-
 var myHeaders = new Headers();
-myHeaders.append("Authorization", "Basic amFuLXBoaWxpcHAucmljaHRtYW5uLjIwQHVjbC5hYy51azpiMDI1ZmFkODk4ZTM0OWYxMWUyOGQ1NDhjZjM2OTZiNDFmOTQ5ZDBh");
+myHeaders.append("Authorization", "Your-Token");
 myHeaders.append('Accept', 'application/json');
 
 var requestOptions = {
@@ -69,6 +62,7 @@ var requestOptions = {
   redirect: 'follow'
 };
 
+// get data filtered by local authority
 fetch("https://epc.opendatacommunities.org/api/v1/domestic/search?local-authority=E08000003", requestOptions)
   .then(response => response.text())
   .then(function(result) { 
@@ -84,10 +78,6 @@ fetch("https://epc.opendatacommunities.org/api/v1/domestic/search?local-authorit
     console.log(energy);
   })
   .catch(error => console.log('error', error));
-
-  
-
-
 
 //Pop-up window
 const modal = document.querySelector('#my-modal');
